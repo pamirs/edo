@@ -12,7 +12,7 @@ void verifySolution()
     CPPUNIT_ASSERT(isPerm(std::string("abcdef"),std::string("abcdeh")) == false);
     CPPUNIT_ASSERT(isPerm(std::string("$5^^jdfsg:"),std::string("$5^^jdfsg"))  == false);
     CPPUNIT_ASSERT(isPerm(std::string("      "),std::string("sdfhgf"))  == false);
-    
+   
     
     std::string str="abcdefgh";
     std::string str2;
