@@ -20,12 +20,10 @@ INCLUDES =
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like:
-LFLAGS = 
+LDFLAGS = 
 
-# define any libraries to link into executable:
-#   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
-#   option, something like (this will link in libmylib.so and libm.so:
-LIBS = -lcppunit
+CFLAGS += `pkg-config --cflags cppunit`
+LDFLAGS += `pkg-config --libs cppunit`
 
 OBJ_DIR = obj
 
@@ -60,27 +58,16 @@ MAIN = boom
 all: $(MAIN)
 	@echo  Compilation successful
 
-$(OBJ_DIR):
-	$(MD) -p $(OBJ_DIR)
-
-../test/$(OBJ_DIR):
-	$(MD) -p ../test/$(OBJ_DIR)
-
 $(MAIN): $(OBJS) 
-	@$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LDFLAGS) $(LIBS)
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
 # the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
 # (see the gnu make manual section about automatic variables)
-#.cpp.o:
-#	@$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
-#
-#	@mkdir -p $(@D)
 
-#.cpp.o:
-#	@echo $< $@
-#	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+.cpp.o:
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJ_DIR)/%.o : %.cpp
 	@mkdir -p $(@D)
@@ -95,7 +82,9 @@ $(OBJ_DIR)/%.o : %.cpp
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	$(RM) -rf *.o *~ $(MAIN)
+	@find ../. -name "*.o" -type f -delete
+	@find ../. -name "*.~" -type f -delete
+	@$(RM) -rf $(MAIN)
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
