@@ -9,9 +9,15 @@
 MD := mkdir
 RM := rm
 CC := g++
-
+GCCVERSION := $(shell gcc --version | grep ^gcc | sed 's/^.* //g')
+echo $(GCCVERSION)
 # define any compile-time flags
-CFLAGS = -Wall -g -std=c++14
+ifeq "$(GCCVERSION)" "4.8.4"
+	CFLAGS = -Wall -g -std=c++1y
+else
+	CFLAGS = -Wall -g -std=c++14
+endif
+
 
 # define any directories containing header files other than /usr/include
 #
