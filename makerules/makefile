@@ -10,7 +10,6 @@ MD := mkdir
 RM := rm
 CC := g++
 GCCVERSION := $(shell gcc --version | grep ^gcc | sed 's/^.* //g')
-echo $(GCCVERSION)
 # define any compile-time flags
 ifeq "$(GCCVERSION)" "4.8.4"
 	CFLAGS = -Wall -g -std=c++1y
