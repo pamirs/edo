@@ -9,9 +9,14 @@
 MD := mkdir
 RM := rm
 CC := g++
-
+GCCVERSION := $(shell gcc --version | grep ^gcc | sed 's/^.* //g')
 # define any compile-time flags
-CFLAGS = -Wall -g -std=c++11
+ifeq "$(GCCVERSION)" "4.8.4"
+	CFLAGS = -Wall -g -std=c++1y
+else
+	CFLAGS = -Wall -g -std=c++14
+endif
+
 
 # define any directories containing header files other than /usr/include
 #
@@ -30,8 +35,8 @@ OBJ_DIR = obj
 SRCS = $(wildcard *.cpp) 
 
 ifndef NOTEST
-SRCS += $(wildcard ../test/*.cpp)
-SRCS += $(wildcard ../../test/*.cpp)
+SRCS += $(wildcard $(PROJECT_ROOT)/test/*.cpp)
+SRCS += $(wildcard $(TEST_DIR)/*.cpp)
 endif
 
 OBJS = $(join $(addsuffix $(OBJ_DIR)/, $(dir $(SRCS))), $(notdir $(SRCS:.cpp=.o)))
@@ -73,17 +78,19 @@ $(OBJ_DIR)/%.o : %.cpp
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-../test/obj/%.o : ../test/%.cpp
+$(TEST_DIR)/obj/%.o : $(TEST_DIR)/%.cpp
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-../../test/obj/%.o : ../../test/%.cpp
+$(PROJECT_ROOT)/test/obj/%.o : $(PROJECT_ROOT)/test/%.cpp
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@find ../. -name "*.o" -type f -delete
-	@find ../. -name "*.~" -type f -delete
+	@find . -name "*.o" -type f -delete
+	@find . -name "*.~" -type f -delete
+	@find  $(TEST_DIR)/. -name "*.o" -type f -delete
+	@find -$(TEST_DIR)/. -name "*.~" -type f -delete
 	@$(RM) -rf $(MAIN)
 
 depend: $(SRCS)
