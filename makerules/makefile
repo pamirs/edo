@@ -12,7 +12,7 @@ CC := g++
 GCCVERSION := $(shell gcc --version | grep ^gcc | sed 's/^.* //g')
 # define any compile-time flags
 ifeq "$(GCCVERSION)" "4.8.4"
-	CFLAGS = -Wall -g -std=c++1y
+	CFLAGS = -Wall -g -std=c++0x
 else
 	CFLAGS = -Wall -g -std=c++14
 endif
