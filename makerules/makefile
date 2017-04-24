@@ -34,6 +34,17 @@ OBJ_DIR = obj
 
 SRCS = $(wildcard *.cpp) 
 
+ifndef TEST_DIR
+TEST_DIR = .
+NOTEST = 1
+endif
+
+
+ifndef PROJECT_ROOT
+PROJECT_ROOT = .
+NOTEST = 1
+endif
+
 ifndef NOTEST
 SRCS += $(wildcard $(PROJECT_ROOT)/test/*.cpp)
 SRCS += $(wildcard $(TEST_DIR)/*.cpp)
@@ -90,7 +101,7 @@ clean:
 	@find . -name "*.o" -type f -delete
 	@find . -name "*.~" -type f -delete
 	@find  $(TEST_DIR)/. -name "*.o" -type f -delete
-	@find -$(TEST_DIR)/. -name "*.~" -type f -delete
+	@find  $(TEST_DIR)/. -name "*.~" -type f -delete
 	@$(RM) -rf $(MAIN)
 
 depend: $(SRCS)
